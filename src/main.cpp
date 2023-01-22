@@ -6,7 +6,7 @@
 #define FILESYSTEM LittleFS
 
 #define ARDUINO_GET_ALL_DATA "a"
-#define ALL_DATA_COUNT 6
+#define ALL_DATA_COUNT 7
 #define ARDUINO_STOP_CHARGING "x"
 #define ARDUINO_RESET "r"
 #define ARDUINO_SET_CURRENT "i?"
@@ -93,7 +93,8 @@ String getTextBatteryState(int state) {
 }
 
 String parseJson(String data) {
-  String parsedData[ALL_DATA_COUNT]; // ({current}, {voltage}, {needed current}, {pwm}, {type}, {state})
+  // ({current}, {voltage}, {needed current}, {percentage}, {pwm}, {type}, {state})
+  String parsedData[ALL_DATA_COUNT]; 
   int i = 0, j = 0;
   for (const char c : data) {
     if (c == ',') {
@@ -113,9 +114,10 @@ String parseJson(String data) {
   json["current"] = parsedData[0];
   json["voltage"] = parsedData[1];
   json["target"] = parsedData[2];
-  json["pwm"] = parsedData[3];
-  json["type"] = getTextBatteryType(parsedData[4].toInt());
-  json["state"] = getTextBatteryState(parsedData[5].toInt());
+  json["percent"] = parsedData[3];
+  json["pwm"] = parsedData[4];
+  json["type"] = getTextBatteryType(parsedData[5].toInt());
+  json["state"] = getTextBatteryState(parsedData[6].toInt());
   String output;
   serializeJson(json, output);
   return output;
